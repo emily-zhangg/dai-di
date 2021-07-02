@@ -10,7 +10,7 @@ export default function initGameController(db) {
   };
   const inviteUsers = async (req, res) => {
     const { player1Id, player2Id, player3Id, player4Id } = req.body;
-    console.log(req.body);
+    console.log(req, req.body);
     console.log(player1Id);
     const createGame = await db.Game.create({
       player1Id,
