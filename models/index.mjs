@@ -60,10 +60,14 @@ db.Game.belongsTo(db.User, {
 // })
 
 db.Game.hasMany(db.Round);
-db.User.hasMany(db.Round);
+db.User.hasMany(db.Round, {
+  foreignKey: "player_id",
+});
 
 db.Round.belongsTo(db.Game);
-db.Round.belongsTo(db.User);
+db.Round.belongsTo(db.User, {
+  foreignKey: "player_id",
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

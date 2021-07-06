@@ -16,4 +16,8 @@ export default function bindRoutes(app) {
   app.get("/create", gameController.create);
   app.post("/invite", gameController.inviteUsers);
   app.get("/invites", gameController.getInvites);
+  app.post("/init", gameController.initGame);
+  app.get("/cards", gameController.getCards);
+  app.get("/refresh", gameController.refresh);
+  app.post("/playRound", gameController.playRound);
 }

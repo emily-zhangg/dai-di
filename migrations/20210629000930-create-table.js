@@ -108,6 +108,18 @@ module.exports = {
           key: "id",
         },
       },
+      player1_cards: {
+        type: Sequelize.JSON,
+      },
+      player2_cards: {
+        type: Sequelize.JSON,
+      },
+      player3_cards: {
+        type: Sequelize.JSON,
+      },
+      player4_cards: {
+        type: Sequelize.JSON,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

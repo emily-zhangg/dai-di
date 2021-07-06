@@ -8,28 +8,40 @@ export default function initRoundModel(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      game_id: {
+      gameId: {
         type: DataTypes.INTEGER,
         references: {
           model: "games",
           key: "id",
         },
       },
-      cards_played: {
+      cardsPlayed: {
         type: DataTypes.JSON,
       },
-      skip_counter: {
+      skipCounter: {
         type: DataTypes.INTEGER,
       },
       player: {
         type: DataTypes.STRING,
       },
-      player_id: {
+      playerId: {
         type: DataTypes.INTEGER,
         references: {
           model: "users",
           key: "id",
         },
+      },
+      player1Cards: {
+        type: DataTypes.JSON,
+      },
+      player2Cards: {
+        type: DataTypes.JSON,
+      },
+      player3Cards: {
+        type: DataTypes.JSON,
+      },
+      player4Cards: {
+        type: DataTypes.JSON,
       },
       // ... [<OTHER_COLUMNS>]
       createdAt: {
