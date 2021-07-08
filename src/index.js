@@ -6,12 +6,28 @@ const acceptInvitesDiv = document.getElementById("invitation");
 const gameDiv = document.getElementById("game");
 const gameStatus = document.getElementById("gameStatus");
 const cardCombination = document.getElementById("combination");
+const prevCards = document.getElementById("prevCards");
+const newGameNavLink = document.getElementById("newGame");
+const seeInvitesLink = document.getElementById("seeInvites");
+const resumeGameLink = document.getElementById("resumeGame");
+const gameInfo = document.getElementById("gameExplanation");
+const navGameInfo = document.getElementById("navBar-info");
+navGameInfo.addEventListener("click", () => {
+  gameInfo.setAttribute("style", "display:block");
+});
+const cardsDiv = document.getElementById("cardsDiv");
+resumeGameLink.addEventListener("click", () => {
+  gameDiv.setAttribute("style", "display:block");
+  gameInfo.setAttribute("style", "display:none");
+  acceptInvitesDiv.setAttribute("style", "display:none");
+  setPlayersDiv.setAttribute("style", "display:none");
+});
 const cardStyle = (card) => {
   if (card.getAttribute("class") === "cards clicked") {
     card.setAttribute("style", "border:0mm ");
     card.setAttribute("class", "cards");
   } else {
-    card.setAttribute("style", "border:4mm ridge rgba(170, 50, 220, .6) ");
+    card.setAttribute("style", "border:2px solid rgba(3, 123, 252) ");
     card.setAttribute("class", "cards clicked");
   }
 };
@@ -70,15 +86,21 @@ card13.addEventListener("click", () => {
 const showCards = document.getElementById("showCards");
 const refreshButton = document.getElementById("refresh");
 const playCardsButton = document.getElementById("submit");
-createGameButton.addEventListener("click", async () => {
+const skipButton = document.getElementById("skip");
+
+const createGameHandler = async () => {
+  gameInfo.setAttribute("style", "display:none");
+  setPlayersDiv.setAttribute("style", "display:block");
   createGameButton.setAttribute("style", "display:none");
   sendInvitesButton.setAttribute("style", "display:block");
+  acceptInvitesDiv.setAttribute("styles", "display:none");
+  gameDiv.setAttribute("style", "display:none");
   const users = await axios.get("/create");
   console.log(users, "hi");
   const player1Element = document.createElement("p");
   player1Element.innerHTML = "You are Player 1";
   setPlayersDiv.appendChild(player1Element);
-  for (i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     const selectElement = document.createElement("select");
     setPlayersDiv.appendChild(selectElement);
     selectElement.setAttribute("id", `player${i + 2}`);
@@ -98,7 +120,34 @@ createGameButton.addEventListener("click", async () => {
   }
 
   //on click will get all players name from db and create 4 drop downs
-});
+};
+const fetchInvitesHandler = async () => {
+  acceptInvitesDiv.setAttribute("style", "display:block");
+  gameInfo.setAttribute("style", "display:none");
+  gameDiv.setAttribute("style", "display:none");
+  setPlayersDiv.setAttribute("style", "display:none");
+  const invites = await axios.get("/invites");
+  console.log(invites);
+  const invitations = invites.data;
+  invitations.forEach((invite) => {
+    if (invite.gameState === "pending") {
+      console.log("one added");
+      const inviteCard = document.createElement("div");
+      const acceptInvite = document.createElement("button");
+      acceptInvite.innerHTML = "Join Game";
+      inviteCard.innerHTML = `You got a game invite. for game ${invite.id}`;
+      acceptInvite.setAttribute("id", invite.id);
+      acceptInvite.setAttribute("class", "game-invite-button");
+      acceptInvitesDiv.appendChild(inviteCard);
+      inviteCard.appendChild(acceptInvite);
+      acceptInvite.addEventListener("click", () => {
+        joinGame(invite.id);
+      });
+    }
+  });
+};
+newGameNavLink.addEventListener("click", createGameHandler);
+createGameButton.addEventListener("click", createGameHandler);
 const selectedOption = (sel) => {
   console.log(sel);
   for (i = 0; i < sel.length; i++) {
@@ -114,7 +163,7 @@ const selectedOption = (sel) => {
     }
   });
 };
-sendInvitesButton.addEventListener("click", async () => {
+const sendInvitesHandler = async () => {
   const player2 = document.getElementById("player2");
   const player2Id = player2.value;
   const player3 = document.getElementById("player3");
@@ -131,7 +180,10 @@ sendInvitesButton.addEventListener("click", async () => {
   console.log(data);
   const sendInvites = await axios.post("/invite", data);
   setPlayersDiv.setAttribute("style", "display:none");
-});
+  fetchInvitesHandler();
+};
+seeInvitesLink.addEventListener("click", fetchInvitesHandler);
+sendInvitesButton.addEventListener("click", sendInvitesHandler);
 
 const joinGame = async (gameId) => {
   gameDiv.setAttribute("style", "display:block");
@@ -155,25 +207,7 @@ const joinGame = async (gameId) => {
   }
 };
 
-refreshInvitesButton.addEventListener("click", async () => {
-  acceptInvitesDiv.setAttribute("styles", "display:block");
-  const invites = await axios.get("/invites");
-  console.log(invites);
-  const invitations = invites.data;
-  invitations.forEach((invite) => {
-    const inviteCard = document.createElement("div");
-    const acceptInvite = document.createElement("button");
-    acceptInvite.innerHTML = "Join Game";
-    inviteCard.innerHTML = `You got a game invite. for game ${invite.id}`;
-    acceptInvite.setAttribute("id", invite.id);
-    acceptInvite.setAttribute("class", "game-invite-button");
-    acceptInvitesDiv.appendChild(inviteCard);
-    inviteCard.appendChild(acceptInvite);
-    acceptInvite.addEventListener("click", () => {
-      joinGame(invite.id);
-    });
-  });
-});
+refreshInvitesButton.addEventListener("click", fetchInvitesHandler);
 const showPlayerCards = async () => {
   const cards = await axios.get("/cards");
   console.log(cards);
@@ -185,6 +219,14 @@ const showPlayerCards = async () => {
       card.setAttribute("style", "display:none");
     }
   });
+};
+const displayCombination = (cards) => {
+  console.log(cards);
+  let outputMessage = "";
+  cards.forEach((card) => {
+    outputMessage += `, ${card.name} of ${card.suit}`;
+  });
+  return outputMessage;
 };
 showCards.addEventListener("click", showPlayerCards);
 const refreshGame = async () => {
@@ -208,12 +250,21 @@ const refreshGame = async () => {
     gameMessage += `<br>It is Player ${Number(startingIndex) + 1}'s turn`;
   } else if (previousRound.data[0].skipCounter === 3) {
     gameMessage += `<br>It is your turn. As all previous players have skipped, you can put down a new combination`;
-  } else if (previousRound.data.length === 1) {
-    gameMessage += `The combination is ${previousRound.data[0].cardsPlayed.length} cards, ${previousRound.data[0].player} has played his turn, it is the next player's turn<br>Last Combination played is: ${previousRound.data[0].cardsPlayed} `;
+  } else if (previousRound.data.length === 2) {
+    cardCombination.innerHTML = `The combination is ${previousRound.data[0].cardsPlayed.length} cards, ${previousRound.data[0].player} has played his turn, it is the next player's turn`;
+    prevCards.innerHTML = `Last Combination played is${displayCombination(
+      previousRound.data[0].cardsPlayed
+    )} `;
   } else {
-    gameMessage += `The combination is ${previousRound.data[1].cardsPlayed.length} cards, ${previousRound.data[0].player} has played his turn, it is the next player's turn<br>Last Combination played is: ${previousRound.data[1].cardsPlayed} `;
+    cardCombination.innerHTML = `The combination is ${previousRound.data[1].cardsPlayed.length} cards, ${previousRound.data[0].player} has skipped his turn, it is the next player's turn`;
+    prevCards.innerHTML = `Last Combination played is${displayCombination(
+      previousRound.data[1].cardsPlayed
+    )} `;
   }
   gameStatus.innerHTML = gameMessage;
+  if (previousRound.data[previousRound.data.length - 1].winner) {
+    cardCombination.innerHTML = `The game has ended, and ${previousRound.data[0].player} has won the game`;
+  }
 };
 refreshButton.addEventListener("click", refreshGame);
 playCardsButton.addEventListener("click", async () => {
@@ -249,6 +300,8 @@ playCardsButton.addEventListener("click", async () => {
           cardRank = cardName;
       }
       if (card.getAttribute("class") === "cards clicked") {
+        cardsDiv.removeChild(card);
+        console.log("played", card);
         cardsPlayed.push({
           name: cardName,
           rank: cardRank,
@@ -259,6 +312,7 @@ playCardsButton.addEventListener("click", async () => {
         card.getAttribute("class") === "cards" &&
         card.getAttribute("src")
       ) {
+        console.log("remained", card);
         cardsRemaining.push({
           name: cardName,
           rank: cardRank,
@@ -274,4 +328,13 @@ playCardsButton.addEventListener("click", async () => {
     cardsRemaining,
   });
   showPlayerCards();
+  refreshGame();
+  if (cardsRemaining.length == 0) {
+    cardCombination.innerHTML = "Congrats you have won the game";
+  }
+});
+skipButton.addEventListener("click", async () => {
+  const skipRound = await axios.get("/skip");
+  showPlayerCards();
+  refreshGame();
 });

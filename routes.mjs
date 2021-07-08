@@ -20,4 +20,5 @@ export default function bindRoutes(app) {
   app.get("/cards", gameController.getCards);
   app.get("/refresh", gameController.refresh);
   app.post("/playRound", gameController.playRound);
+  app.get("/skip", gameController.skipRound);
 }

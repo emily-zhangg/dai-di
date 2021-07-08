@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dai di</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link href="index.css" rel="stylesheet" />
+  <script defer src="index-e8fcdcacd06fc1fe7cd1.bundle.js"></script></head>
+  <body>
+    <nav class="navbar navbar-light">
+      <div class="container-fluid">
+        <a id="navBar-info" class="navbar-brand" href="#" style="color: white">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGtitut0glo2QBSyTUAss5Xk-WnsA2bK1TDg&usqp=CAU"
+            alt=""
+            width="30"
+            height="24"
+            class="d-inline-block align-text-top"
+          />
+          Dai Di
+        </a>
+        <a class="nav-link" id="newGame" href="#" style="color: white"
+          >New Game</a
+        >
+        <a class="nav-link" id="seeInvites" href="#" style="color: white"
+          >See Invites</a
+        >
+        <a class="nav-link" id="resumeGame" href="#" style="color: white"
+          >Resume Game</a
+        >
+      </div>
+    </nav>
+    <div id="gameExplanation" class="gameExplanation">
+      <h4>How to play</h4>
+      <ol>
+        <li>
+          Click on 'New Game' to create a new Dai Di Game where you can invite
+          your friends by selecting their names from the drop down select inputs
+        </li>
+        <li>
+          Click on 'See Invites' to see the games that you have started / are
+          invited to
+        </li>
+        <li>
+          Once all players have joined the game, the game will start and the
+          players will be dealt their hand of cards
+        </li>
+      </ol>
+      <h4>Game Rules</h4>
+      <p>
+        The aim of the game is to be the first to get rid of all the cards on
+        hand
+      </p>
+      <p>
+        The player with 3 of diamonds will start the first round, which will
+        continue until 3 players consecutively skipped their turn. When that
+        happens, the round ends and the last player who player their hand gets
+        to begin a new round
+      </p>
+      <p>
+        For within each round, players are only allowed to play a hand that is
+        of the same combination and has a higher value.
+      </p>
+      <p>Card Combinations allowed in the game are:</p>
+      <ul>
+        <li>Singles</li>
+        <li>Doubles</li>
+        <li>Triples</li>
+        <li>Any 5-card hand</li>
+      </ul>
+      <p>The game ends once a player got rid of all the cards in their</p>
+    </div>
+    <div id="create" style="display: none">
+      <button id="create-game">Start A New Game</button>
+      <button id="start-game" class="btn btn-light">Invite Players</button>
+    </div>
+    <div id="invitation" style="display: none">
+      <button id="refresh-invites" class="btn btn-light">
+        Fetch Invitations
+      </button>
+    </div>
+    <div id="game" style="display: none">
+      <h6 id="gameStatus"></h6>
+      <p id="combination"></p>
+      <p id="prevCards"></p>
+      <button id="showCards" class="btn btn-light">Show Cards</button>
+      <div id="cardsDiv" class="cards-display">
+        <img src="" class="cards" id="card1" />
+        <img src="" class="cards" id="card2" />
+        <img src="" class="cards" id="card3" />
+        <img src="" class="cards" id="card4" />
+        <img src="" class="cards" id="card5" />
+        <img src="" class="cards" id="card6" />
+        <img src="" class="cards" id="card7" />
+        <img src="" class="cards" id="card8" />
+        <img src="" class="cards" id="card9" />
+        <img src="" class="cards" id="card10" />
+        <img src="" class="cards" id="card11" />
+        <img src="" class="cards" id="card12" />
+        <img src="" class="cards" id="card13" />
+      </div>
+      <div class="cards-buttons">
+        <button id="submit" class="btn btn-light">Play Cards</button>
+        <button id="skip" class="btn btn-light">Skip</button>
+        <button id="refresh" class="btn btn-light">Refresh</button>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>

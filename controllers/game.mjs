@@ -1,7 +1,9 @@
+import { resolve } from "path";
+
 export default function initGameController(db) {
   const { Op } = db.Sequelize;
   const index = (req, res) => {
-    res.render("root");
+    res.sendFile(resolve("dist", "index.html"));
   };
   const create = async (req, res) => {
     const users = await db.User.findAll();
@@ -217,17 +219,26 @@ export default function initGameController(db) {
         gameId: Number(req.cookies.gameId),
       },
     });
+    const gameData = await db.Game.findAll({
+      where: {
+        id: Number(req.cookies.gameId),
+      },
+    });
     const previousRound = roundsData.pop();
     let currentSkipCounter = previousRound.dataValues.skipCounter;
     if (currentSkipCounter != null) {
       let lastRoundPlayed;
-      while (currentSkipCounter >= 0) {
+      while (currentSkipCounter > 0) {
         lastRoundPlayed = roundsData.pop();
         currentSkipCounter -= 1;
       }
-      res.send([previousRound.dataValues, lastRoundPlayed.dataValues]);
+      res.send([
+        previousRound.dataValues,
+        lastRoundPlayed.dataValues,
+        gameData[0].dataValues,
+      ]);
     } else {
-      res.send([previousRound.dataValues]);
+      res.send([previousRound.dataValues, gameData[0].dataValues]);
     }
   };
   const playRound = async (req, res) => {
@@ -247,6 +258,7 @@ export default function initGameController(db) {
       player3Cards,
       player4Cards,
     ];
+    console.log("hiiii;", req.body.cardsRemaining);
     playerCards[Number(req.cookies.playerNumber - 1)] = req.body.cardsRemaining;
     const createRound = await db.Round.create({
       gameId: Number(req.cookies.gameId),
@@ -257,6 +269,40 @@ export default function initGameController(db) {
       player2Cards: playerCards[1],
       player3Cards: playerCards[2],
       player4Cards: playerCards[3],
+    });
+    if (req.body.cardsRemaining.length === 0) {
+      const updateGame = await db.Game.update(
+        {
+          winner: Number(req.cookies.playerNumber),
+        },
+        {
+          where: { id: Number(req.cookies.gameId) },
+        }
+      );
+    }
+    res.send("done");
+  };
+  const skipRound = async (req, res) => {
+    const roundsData = await db.Round.findAll({
+      where: {
+        gameId: Number(req.cookies.gameId),
+      },
+    });
+    const previousRound = roundsData.pop().dataValues;
+    const player1Cards = previousRound.player1Cards;
+    const player2Cards = previousRound.player2Cards;
+    const player3Cards = previousRound.player3Cards;
+    const player4Cards = previousRound.player4Cards;
+    const skipCounter = previousRound.skipCounter + 1;
+    const createRound = await db.Round.create({
+      gameId: Number(req.cookies.gameId),
+      skipCounter: skipCounter,
+      player: `Player${req.cookies.playerNumber}`,
+      playerId: req.cookies.userId,
+      player1Cards: player1Cards,
+      player2Cards: player2Cards,
+      player3Cards: player3Cards,
+      player4Cards: player4Cards,
     });
     res.send("done");
   };
@@ -269,5 +315,6 @@ export default function initGameController(db) {
     getCards,
     refresh,
     playRound,
+    skipRound,
   };
 }

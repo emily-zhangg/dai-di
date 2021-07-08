@@ -1,0 +1,86 @@
+.cards-display {
+  width: 70vw;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+img {
+  width: 8%;
+  margin: 2px;
+}
+.nav-link {
+  text-decoration: none;
+}
+body {
+  background-color: rgba(255, 239, 196, 0.686);
+}
+nav {
+  background-color: rgb(153, 16, 16);
+}
+#create {
+  width: 40vw;
+  margin: auto;
+  height: 30vh;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 35vh;
+  background-color: rgb(211, 175, 147);
+  border: 4px solid rgb(153, 16, 16);
+  border-radius: 4px;
+}
+#invitation {
+  width: 60vw;
+  margin: auto;
+  text-align: center;
+  padding-top: 10px;
+  margin-top: 35vh;
+  background-color: rgb(211, 175, 147);
+  border: 4px solid rgb(153, 16, 16);
+  border-radius: 4px;
+}
+#start-game,
+#refresh-invites {
+  width: 90%;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 5vh;
+}
+.game-invite-button {
+  font-size: small;
+  margin: 5px;
+  background-color: wheat;
+  border-radius: 5px;
+}
+#submit,
+#showCards,
+#skip,
+#refresh {
+  border: 2px solid rgb(153, 16, 16);
+  margin-top: 5vh;
+}
+
+#showCards {
+  width: 80%;
+  text-align: center;
+  margin-left: 10vw;
+  margin-bottom: 5vh;
+}
+#gameStatus,
+#combination,
+#prevCards {
+  width: 80%;
+  margin-left: 10vw;
+  margin-top: 2vh;
+}
+.cards-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: auto;
+}
+.gameExplanation {
+  width: 80vw;
+  margin: auto;
+  margin-top: 5vh;
+}

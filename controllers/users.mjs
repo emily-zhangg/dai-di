@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
+import { resolve } from "path";
 export default function initUserController(db) {
   const login = (req, res) => {
-    res.render("login", {});
+    res.sendFile(resolve("dist", "login.html"));
   };
   const signUp = async (req, res) => {
     const { username, email, password } = req.body;
